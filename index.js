@@ -78,44 +78,64 @@ async function promptUser() {
         }
 
     }
+    // needed to move this here because of async running past it, ending code before being able to input anything
+    let totalHTML = generateTeamHTML(teamMembers);
+    fs.writeFile('index.html', totalHTML, (err) => {
+        if (err) throw err;
+    })
 }
 
 function generateTeamHTML(teamMembers) {
     let html = '';
 
-    // Loop over each team member and append their info to the HTML string
+    // Loop over each member and add to html string
     for (let member of teamMembers) {
-      // Create a string with team member info
         let memberHTML = `
-        <div>
+        <div class="card">
             <h2>${member.name}</h2>
-            <p>Role: ${member.role}</p>
+            <p class="role">Role: ${member.role}</p>
             <p>ID: ${member.id}</p>
             <p>Email: <a href="mailto:${member.email}">${member.email}</a></p>
         `;
 
-      // Add additional info based on the member's role
+      // Add info based on traits
         if (member.role === 'Engineer') {
-            memberHTML += `<p>Github: <a href="https://github.com/${member.github}">${member.github}</a></p>`;
+            memberHTML += `<p>Github: <a href="https://github.com/${member.gitHub}">${member.gitHub}</a></p>`;
         } else if (member.role === 'Intern') {
             memberHTML += `<p>School: ${member.school}</p>`;
         } else if (member.role === 'Manager') {
             memberHTML += `<p>Office Number: ${member.officeNumber}</p>`;
         }
 
-      // Close the div for this team member
+      // Close the div for this single member
         memberHTML += `</div>`;
       // Add to total HTML string
         html += memberHTML;
     }
     // Return the final HTML string
-    return html;
+    return `
+    <style>
+        .card {
+            background-color: #f8f8f8;
+            border-radius: 10px;
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            padding: 20px;
+            width: 300px;
+        }
+        h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .role {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+    <div class="card-container">
+        ${html}
+    </div>
+    `;
 }
 
 promptUser();
-
-let totalHTML = generateTeamHTML(teamMembers);
-
-let body = document.querySelector('body');
-
-body.innerHTML += totalHTML;
