@@ -80,5 +80,42 @@ async function promptUser() {
     }
 }
 
+function generateTeamHTML(teamMembers) {
+    let html = '';
+
+    // Loop over each team member and append their info to the HTML string
+    for (let member of teamMembers) {
+      // Create a string with team member info
+        let memberHTML = `
+        <div>
+            <h2>${member.name}</h2>
+            <p>Role: ${member.role}</p>
+            <p>ID: ${member.id}</p>
+            <p>Email: <a href="mailto:${member.email}">${member.email}</a></p>
+        `;
+
+      // Add additional info based on the member's role
+        if (member.role === 'Engineer') {
+            memberHTML += `<p>Github: <a href="https://github.com/${member.github}">${member.github}</a></p>`;
+        } else if (member.role === 'Intern') {
+            memberHTML += `<p>School: ${member.school}</p>`;
+        } else if (member.role === 'Manager') {
+            memberHTML += `<p>Office Number: ${member.officeNumber}</p>`;
+        }
+
+      // Close the div for this team member
+        memberHTML += `</div>`;
+      // Add to total HTML string
+        html += memberHTML;
+    }
+    // Return the final HTML string
+    return html;
+}
 
 promptUser();
+
+let totalHTML = generateTeamHTML(teamMembers);
+
+let body = document.querySelector('body');
+
+body.innerHTML += totalHTML;
