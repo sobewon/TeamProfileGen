@@ -80,7 +80,11 @@ async function promptUser() {
     }
     // needed to move this here because of async running past it, ending code before being able to input anything
     let totalHTML = generateTeamHTML(teamMembers);
-    fs.writeFile('index.html', totalHTML, (err) => {
+    fs.writeFile('./dist/index.html', totalHTML, (err) => {
+        if (err) throw err;
+    })
+    let cssStyle = generateCSS();
+    fs.writeFile('./dist/style.css', cssStyle, (err) => {
         if (err) throw err;
     })
 }
@@ -114,28 +118,76 @@ function generateTeamHTML(teamMembers) {
     }
     // Return the final HTML string
     return `
-    <style>
-        .card {
-            background-color: #f8f8f8;
-            border-radius: 10px;
-            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
-            margin: 10px;
-            padding: 20px;
-            width: 300px;
-        }
-        h2 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        .role {
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-    </style>
-    <div class="card-container">
-        ${html}
-    </div>
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>My Page</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <h1 class="header">Team Members</h1>
+        <div class="card-container">
+            ${html}
+        </div>
+    </body>
+    </html>
+
     `;
+}
+
+//function to generate CSS style sheet code 
+//------------#NOTE--------------
+//for now it can be hard coded, 
+//however later we can cut back on css code by
+//using if statements to write out only what is needed
+function generateCSS() {
+    return `
+    .card-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    body {
+        background-color: #e6f7ff;
+    }
+
+    .header {
+        color: #2c3e50;
+        font-size: 32px;
+        margin-top: 30px;
+        margin-bottom: 20px;
+        background-color: #bdc3c7;
+    }
+    
+    .card {
+        width: calc(25% - 10px);
+        margin-bottom: 20px;
+        padding: 10px;
+        box-sizing: border-box;
+        border-radius: 5px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card:nth-child(odd) {
+        background-color: #f7f7f7;
+    }
+    
+    .card h2 {
+        margin-top: 0;
+    }
+    
+    .card p {
+        margin-bottom: 5px;
+    }
+    
+    .card p.role {
+        font-weight: bold;
+        color: #666;
+        font-size: 16px;
+    }`
 }
 
 promptUser();
