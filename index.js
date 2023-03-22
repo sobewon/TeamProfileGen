@@ -1,14 +1,16 @@
+//packages
 const inquirer = require("inquirer");
 const fs = require('fs');
 
-
+//modules
 const Employee = require("./lib/Employee");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const Manager = require("./lib/Manager");
 
 
-
+//function to prompt and take input from user
+//Also contains calls to generateTeamHTML and generateCSS due to using async
 async function promptUser() {
     let done = false;
     let teamMembers = [];   //const or let? not sure yet
@@ -88,7 +90,7 @@ async function promptUser() {
         if (err) throw err;
     })
 }
-
+//function to generate HTML
 function generateTeamHTML(teamMembers) {
     let html = '';
 
